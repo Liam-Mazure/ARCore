@@ -7,6 +7,7 @@ import com.google.ar.core.Anchor
 import com.google.ar.sceneform.AnchorNode
 import com.google.ar.sceneform.Node
 import com.google.ar.sceneform.assets.RenderableSource
+import com.google.ar.sceneform.math.Vector3
 import com.google.ar.sceneform.rendering.ModelRenderable
 import com.google.ar.sceneform.ux.ArFragment
 import java.util.concurrent.CompletableFuture
@@ -68,26 +69,27 @@ class MainActivityViewModel : ViewModel() {
         }
     }
 
-    fun placeModel(anchor: Anchor, context: Context, index: Int): Node?{
+    fun placeModel(index: Int, anchorNode: AnchorNode): Node? {
         //Check that model renderables have been loaded
-        val modelRenderables = modelRenderables?: return null
+        val modelRenderables = modelRenderables ?: return null
 
         //Check that index is within the range of list
-        if (index < 0 || index >= modelRenderables.size){
+        if (index < 0 || index >= modelRenderables.size) {
             return null
         }
 
         //Create a new Node to hold the model
         val node = Node()
 
-        val anchorNode = AnchorNode(anchor)
-
         node.renderable = modelRenderables[index]
 
-        //Add the node to the scene
-        val arFragment = (context as MainActivity).supportFragmentManager.findFragmentById(R.id.ar_fragment) as ArFragment
-        arFragment.arSceneView.scene.addChild(node)
+        //Set the position of the node relative to the anchor
+        node.localPosition = Vector3.zero()
+
+        //Add the node to the anchor node
+        anchorNode.addChild(node)
 
         return node
     }
+
 }

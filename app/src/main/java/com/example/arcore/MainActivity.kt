@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
             val anchorNode = AnchorNode(anchor)
             anchorNode.setParent(arFragment.arSceneView.scene)
 
-            viewModel.placeModel(anchor, this, index)
+            viewModel.placeModel(index, anchorNode)
 
         }
     }
