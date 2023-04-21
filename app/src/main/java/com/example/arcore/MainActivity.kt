@@ -5,77 +5,87 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.google.ar.sceneform.SceneView
 import android.Manifest
+import android.media.Image
 import android.net.Uri
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.ar.core.Session
 import com.google.ar.sceneform.AnchorNode
 import com.google.ar.sceneform.Node
 import com.google.ar.sceneform.assets.RenderableSource
 import com.google.ar.sceneform.rendering.ModelRenderable
-import com.google.ar.sceneform.rendering.Renderable
-import com.google.ar.sceneform.ux.ArFragment
-import java.util.concurrent.CompletableFuture
 
 
 class MainActivity : AppCompatActivity() {
 
     private val CAMERA_PERMISSION_CODE = 0
-    private lateinit var recyclerView: RecyclerView
+
+    var index = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+
         val arFragment = supportFragmentManager.findFragmentById(R.id.ar_fragment) as CustomArFragment
 
         checkCameraPermission()
 
-        //Initialize RecyclerView
-        recyclerView = findViewById(R.id.recyclerView)
+        //Load the models
+        viewModel.loadModels(this)
 
-//        val objList = listOf(
-//            "android.resource://com.example.arcore/${R.raw.cubone}",
-//            "android.resource://com.example.arcore/${R.raw.snorlax}",
-//        )
+        //ImageViews
+        val amongus = findViewById<ImageView>(R.id.amongus)
+        amongus.setOnClickListener {
+            println("Amongus")
+            index = 0
+        }
 
-        //Create the ObjAdapter
-//        val objAdapter = ObjAdapter(this, objList)
+        val charmander = findViewById<ImageView>(R.id.charmander)
+        charmander.setOnClickListener {
+            println("Charmander")
+            index = 1
+        }
 
-        //Set the adapter for the RecyclerView
-//        recyclerView.adapter = objAdapter
+        val cubone = findViewById<ImageView>(R.id.cubone)
+        cubone.setOnClickListener {
+            println("Cubone")
+            index = 2
+        }
 
-        println("\n\n\n\nModel Builder\n\n\n\n")
-        val renderableSource = RenderableSource.builder()
-            .setSource(this, Uri.parse("cubone.glb"), RenderableSource.SourceType.GLB)
-            .setScale(0.5f)
-            .setRecenterMode(RenderableSource.RecenterMode.ROOT)
-            .build()
+        val mew = findViewById<ImageView>(R.id.mew)
+        mew.setOnClickListener {
+            println("Mew")
+            index = 3
+        }
 
-        val futureRenderable = ModelRenderable.builder()
-            .setSource(this, renderableSource)
-            .build()
+        val pikachu = findViewById<ImageView>(R.id.pikachu)
+        pikachu.setOnClickListener {
+            println("Pikachu")
+            index = 4
+        }
+
+        val snorlax = findViewById<ImageView>(R.id.snorlax)
+        snorlax.setOnClickListener {
+            println("Snorlax")
+            index = 5
+        }
 
         arFragment.setOnTapArPlaneListener { hitResult, plane, motionEvent ->
             val anchor = hitResult.createAnchor()
             val anchorNode = AnchorNode(anchor)
             anchorNode.setParent(arFragment.arSceneView.scene)
 
-            println("Planed tapped\n\n")
+            viewModel.placeModel(anchor, this, index)
 
-            futureRenderable.thenAccept { modelRenderable ->
-                val modelNode = Node()
-                modelNode.renderable = modelRenderable
-                anchorNode.addChild(modelNode)
-            }
         }
     }
 
-    fun loadModel(){
-
-    }
 
     override fun onResume() {
         super.onResume()
@@ -108,7 +118,7 @@ class MainActivity : AppCompatActivity() {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_CODE)
         }
         else{
-
+            println("\nPermission already granted")
         }
     }
 
