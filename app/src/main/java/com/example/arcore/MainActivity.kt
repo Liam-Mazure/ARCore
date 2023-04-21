@@ -13,7 +13,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.ar.core.Session
 import com.google.ar.sceneform.AnchorNode
 import com.google.ar.sceneform.Node
+import com.google.ar.sceneform.assets.RenderableSource
 import com.google.ar.sceneform.rendering.ModelRenderable
+import com.google.ar.sceneform.rendering.Renderable
 import com.google.ar.sceneform.ux.ArFragment
 import java.util.concurrent.CompletableFuture
 
@@ -34,33 +36,45 @@ class MainActivity : AppCompatActivity() {
         //Initialize RecyclerView
         recyclerView = findViewById(R.id.recyclerView)
 
-        val objList = listOf(
-            "android.resource://com.example.arcore/${R.raw.cubone}",
-            "android.resource://com.example.arcore/${R.raw.snorlax}",
-        )
+//        val objList = listOf(
+//            "android.resource://com.example.arcore/${R.raw.cubone}",
+//            "android.resource://com.example.arcore/${R.raw.snorlax}",
+//        )
 
         //Create the ObjAdapter
-        val objAdapter = ObjAdapter(this, objList)
+//        val objAdapter = ObjAdapter(this, objList)
 
         //Set the adapter for the RecyclerView
-        recyclerView.adapter = objAdapter
+//        recyclerView.adapter = objAdapter
 
+        println("\n\n\n\nModel Builder\n\n\n\n")
+        val renderableSource = RenderableSource.builder()
+            .setSource(this, Uri.parse("cubone.glb"), RenderableSource.SourceType.GLB)
+            .setScale(0.5f)
+            .setRecenterMode(RenderableSource.RecenterMode.ROOT)
+            .build()
+
+        val futureRenderable = ModelRenderable.builder()
+            .setSource(this, renderableSource)
+            .build()
 
         arFragment.setOnTapArPlaneListener { hitResult, plane, motionEvent ->
             val anchor = hitResult.createAnchor()
             val anchorNode = AnchorNode(anchor)
             anchorNode.setParent(arFragment.arSceneView.scene)
 
-            val futureObj = ModelRenderable.builder()
-                .setSource(this, R.raw.cubone)
-                .build()
+            println("Planed tapped\n\n")
 
-            futureObj.thenAccept { modelRenderable ->
+            futureRenderable.thenAccept { modelRenderable ->
                 val modelNode = Node()
                 modelNode.renderable = modelRenderable
                 anchorNode.addChild(modelNode)
             }
         }
+    }
+
+    fun loadModel(){
+
     }
 
     override fun onResume() {
