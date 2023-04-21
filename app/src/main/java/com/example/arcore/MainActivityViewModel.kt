@@ -3,13 +3,11 @@ package com.example.arcore
 import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
-import com.google.ar.core.Anchor
 import com.google.ar.sceneform.AnchorNode
 import com.google.ar.sceneform.Node
 import com.google.ar.sceneform.assets.RenderableSource
 import com.google.ar.sceneform.math.Vector3
 import com.google.ar.sceneform.rendering.ModelRenderable
-import com.google.ar.sceneform.ux.ArFragment
 import java.util.concurrent.CompletableFuture
 
 class MainActivityViewModel : ViewModel() {

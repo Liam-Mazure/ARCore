@@ -6,19 +6,10 @@ import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import android.Manifest
-import android.media.Image
-import android.net.Uri
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.ar.sceneform.AnchorNode
-import com.google.ar.sceneform.Node
-import com.google.ar.sceneform.assets.RenderableSource
-import com.google.ar.sceneform.rendering.ModelRenderable
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -86,15 +77,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-    override fun onResume() {
-        super.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-    }
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -121,6 +103,5 @@ class MainActivity : AppCompatActivity() {
             println("\nPermission already granted")
         }
     }
-
-
+    
 }
